@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {font-family: "Lato", sans-serif}
+    </style>
+
+    <title>Search book</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        /* Style the top navigation bar */
+        .topnav {
+            overflow: hidden;
+            background-color: #333;
+        }
+        /* Style the topnav links */
+        .topnav a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        /* Change color on hover */
+        .topnav a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        table, th, td {
+            border: 1px solid #1e1e57;
+            border-collapse: collapse;
+        }
+        table#t01 tr:nth-child(even) {
+            background-color: #eee;
+        }
+        table#t01 tr:nth-child(odd) {
+            background-color: #fff;
+        }
+        table#t01 th {
+            background-color: black;
+            color: white;
+        }
+        /* Style the content */
+        .book {
+            background-color: #ddd;
+            padding: 20px;
+            /*height: 200px; !* Should be removed. Only for demonstration *!*/
+        }
+        /* Height line */
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        /* Style the footer */
+        .footer {
+            background-color: #f1f1f1;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="topnav">
+    <a th:href="@{'/1'}">Book manager</a>
+    <a th:href="@{'/new'}">Add new book</a>
+    <a th:href="@{'/search'}">Search book</a>
+</div>
+
+<div class="book">
+    <table class="table table-bordered table-hover horizontal-align" id="t01">
+        <thead>
+        <tr>
+            <th style="width: 4%; text-align: center">№</th>
+            <th style="width: 29%">Title</th>
+            <th style="width: 30%">Description</th>
+            <th style="width: 14%">Author</th>
+            <th style="width: 14%; text-align: center">ISBN</th>
+            <th style="width: 6%; text-align: center">Print year</th>
+            <th style="width: 7%; text-align: center">Read already</th>
+            <th style="width: 3%; text-align: center">Edit</th>
+            <th style="width: 3%; text-align: center">Delete</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="book : ${books}">
+            <td th:text="${book.id}" style="text-align: center">#</td>
+            <td th:text="${book.title}" style="color: #1e1e57">Title</td>
+            <td th:text="${book.description}">Description</td>
+            <td th:text="${book.author}">Author</td>
+            <td th:text="${book.isbn}" style="text-align: center">ISBN</td>
+            <td th:text="${book.printYear}" id="${book.readAlready}" style="text-align: center">Print year</td>
+            <td style="text-align: center"><a th:href="@{'/read/{id}'(id=${book.id})}"><i th:method="post" th:text="${book.readAlready}"></i></a></td>
+            <td style="text-align: center"><a th:href="@{'/edit/{id}'(id=${book.id})}"><i class="fa fa-edit" style="font-size:20px"></i></a></td>
+            <td style="text-align: center"><a th:href="@{'/delete/{id}'(id=${book.id})}"><i class="fa fa-trash" style="font-size:20px"></i></a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
