@@ -14,6 +14,10 @@ public class Controller {
         this.service = service;
     }
 
+    @GetMapping("/")
+    public String start(Model model){
+        return get(1, model);
+    }
     @RequestMapping(value = "/{pageid}")
     public String get(@PathVariable int pageid, Model model){
 
