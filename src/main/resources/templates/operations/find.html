@@ -9,7 +9,7 @@
         body {font-family: "Lato", sans-serif}
     </style>
 
-    <title>Book manager</title>
+    <title>Search book</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -92,7 +92,7 @@
         </thead>
 
         <tbody>
-        <tr th:each="book : ${viewbooks}">
+        <tr th:each="book : ${books}">
             <td th:text="${book.id}" style="text-align: center">#</td>
             <td th:text="${book.title}" style="color: #1e1e57">Title</td>
             <td th:text="${book.description}">Description</td>
@@ -106,15 +106,5 @@
         </tbody>
     </table>
 </div>
-
-<div class="footer">
-
-    <div class="w3-clear w3-center nextprev">
-    <a class="w3-left w3-btn" th:href="@{'/{pageid}'(pageid=${pageid}-1)}">❮<span class="w3-hide-small"> Previous </span></a>
-    <a class="w3-btn" th:href="@{'/{pageid}'(pageid=${pageid})}"><span class="w3-hide-small"> </span>Reference</a>
-    <a class="w3-right w3-btn" th:href="@{'/{pageid}'(pageid=${pageid}+1)}"><span class="w3-hide-small"> Next </span>❯</a>
-    </div>
-</div>
-
 </body>
 </html>

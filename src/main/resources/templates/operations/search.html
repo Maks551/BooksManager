@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet" type="text/css">
+<title>Save</title>
+<style>
+    body {font-family: "Lato", sans-serif, Arial}
+
+    /* Style the top navigation bar */
+    .topnav {
+        overflow: hidden;
+        background-color: #333;
+    }
+
+    /* Style the topnav links */
+    .topnav a {
+        float: left;
+        display: block;
+        color: #f2f2f2;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+
+    /* Change color on hover */
+    .topnav a:hover {
+        background-color: #ddd;
+        color: black;
+    }
+</style>
+<body>
+
+<div class="topnav">
+    <a href="/1">Book manager</a>
+    <a href="/1">Back</a>
+</div>
+
+<div class="w3-light-grey w3-padding-64 w3-center">
+    <h2 class="w3-wide w3-center">Search by title</h2>
+
+    <form action="/searchByTitle">
+        Title: <input style="margin:0 8px 8px 78px" size="30" type="text" required name="title" placeholder="Enter title">
+        <input class="w3-button w3-dark-grey" type="submit" value="Find book">
+    </form>
+    <h2 class="w3-wide w3-center">Search by author</h2>
+
+    <form action="/searchByAuthor">
+        Author: <input style="margin:0 8px 8px 63px" size="30" type="text" required name="author" placeholder="Enter author">
+        <input class="w3-button w3-dark-grey" type="submit" value="Find book">
+    </form>
+    <h2 class="w3-wide w3-center">Search by read</h2>
+
+    <form action="/searchByRead">
+        Read already: <input style="margin:0 8px 8px 20px" size="30" type="text" required name="read" placeholder="true or false">
+        <input class="w3-button w3-dark-grey" type="submit" value="Find book">
+    </form>
+    <h2 class="w3-wide w3-center">Search by year</h2>
+
+    <form action="/searchByYear">
+        Print year: <input style="margin:0 8px 8px 44px" size="30" type="text" required name="year" placeholder="Enter year">
+        <input class="w3-button w3-dark-grey" type="submit" value="Find book">
+    </form>
+</div>
+</body>
+</html>

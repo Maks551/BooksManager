@@ -6,25 +6,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @org.springframework.stereotype.Controller
 public class Controller {
+    static int TOTAL = 10;
     private BookService service;
     @Autowired
     public void setService(BookService service) {
         this.service = service;
     }
 
+    @GetMapping("/")
+    public String start(Model model){
+        return get(1, model);
+    }
     @RequestMapping(value = "/{pageid}")
     public String get(@PathVariable int pageid, Model model){
 
-        int total = 10;
         int maxPages = service.findAll().size()%10 == 0? service.findAll().size()%10 : (service.findAll().size()%10)-1;
 
         if (pageid < 1) pageid = 1;
         else if (pageid >= maxPages) pageid = maxPages;
 
         model.addAttribute("pageid", pageid);
-        model.addAttribute("viewbooks", service.getBooksByPage(pageid,total));
+        model.addAttribute("viewbooks", service.getBooksByPage(pageid, TOTAL));
         return "index";
     }
 
@@ -37,8 +44,7 @@ public class Controller {
                            @RequestParam("author") String author,
                            @RequestParam("description") String description,
                            @RequestParam("isbn") String isbn,
-                           @RequestParam("printYear") Integer printYear)
-    {
+                           @RequestParam("printYear") Integer printYear){
         service.saveBook(title, author, description, isbn, printYear);
         return "redirect:/";
     }
@@ -75,8 +81,57 @@ public class Controller {
                              @RequestParam("description") String description,
                              @RequestParam("isbn") String isbn,
                              @RequestParam("printYear") Integer printYear){
-
         service.updateBook(id, title, description, isbn, printYear);
         return  "redirect:/";
+    }
+
+    @GetMapping("/search")
+    public String search(){
+        return "operations/search";
+    }
+    @GetMapping("/searchByTitle")
+    public String searchByTitle(@RequestParam String title, Model model){
+        List<Book> result = new ArrayList<>();
+        for (Book book : service.findAll()) {
+            if (book.getTitle().toLowerCase().contains(title.toLowerCase())) result.add(book);
+        }
+        model.addAttribute("books", result);
+        return "operations/find";
+    }
+    @GetMapping("/searchByAuthor")
+    public String searchByAuthor(@RequestParam String author, Model model){
+        List<Book> result = new ArrayList<>();
+        for (Book book : service.findAll()) {
+            if (book.getAuthor().toLowerCase().contains(author.toLowerCase())) result.add(book);
+        }
+        model.addAttribute("books", result);
+        return "operations/find";
+    }
+
+    @GetMapping("/searchByRead")
+    public String searchByRead(@RequestParam String read, Model model){
+        boolean result;
+        String[] true_ = {"true", "yes", "y"};
+        String[] false_ = {"false", "no", "n"};
+        if (read.equalsIgnoreCase("true") || read.equalsIgnoreCase("yes") || read.equalsIgnoreCase("y")){
+            result = true;
+        } else if (read.equalsIgnoreCase("false") || read.equalsIgnoreCase("no") || read.equalsIgnoreCase("not")){
+            result = false;
+        } else return "operations/search";
+        List<Book> resultList = new ArrayList<>();
+        for (Book book : service.findAll()) {
+            if (book.isReadAlready() == result) resultList.add(book);
+        }
+        model.addAttribute("books", resultList);
+        return "operations/find";
+    }
+    @GetMapping("/searchByYear")
+    public String searchByYear(@RequestParam int year, Model model){
+        List<Book> result = new ArrayList<>();
+        for (Book book : service.findAll()) {
+            if (book.getPrintYear().equals(year)) result.add(book);
+        }
+        model.addAttribute("books", result);
+        return "operations/find";
     }
 }
