@@ -11,7 +11,7 @@ import java.util.List;
 
 @org.springframework.stereotype.Controller
 public class Controller {
-    static int TOTAL = 10;
+    private static int TOTAL = 10;
     private BookService service;
     @Autowired
     public void setService(BookService service) {
@@ -111,8 +111,6 @@ public class Controller {
     @GetMapping("/searchByRead")
     public String searchByRead(@RequestParam String read, Model model){
         boolean result;
-        String[] true_ = {"true", "yes", "y"};
-        String[] false_ = {"false", "no", "n"};
         if (read.equalsIgnoreCase("true") || read.equalsIgnoreCase("yes") || read.equalsIgnoreCase("y")){
             result = true;
         } else if (read.equalsIgnoreCase("false") || read.equalsIgnoreCase("no") || read.equalsIgnoreCase("not")){

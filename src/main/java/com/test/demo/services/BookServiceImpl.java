@@ -12,8 +12,9 @@ import java.util.List;
 public class BookServiceImpl implements BookService {
 
     private BookRepository repository;
+
     @Autowired
-    public void setRepository(BookRepository repository) {
+    public BookServiceImpl(BookRepository repository){
         this.repository = repository;
     }
 
@@ -66,11 +67,11 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> getBooksByPage(int pageid, int total){
+    public List<Book> getBooksByPage(int pageId, int total){
         List<Book> list = new ArrayList<>();
         if (repository.findAll().size()>0) {
-            for (int i = (pageid-1) * total; i < repository.findAll().size(); i++) {
-                if (i == (pageid-1) * total + 10) break;
+            for (int i = (pageId -1) * total; i < repository.findAll().size(); i++) {
+                if (i == (pageId -1) * total + 10) break;
                 list.add(getBookById(i+1));
             }
         }
