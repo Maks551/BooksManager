@@ -27,10 +27,11 @@ public class BookServiceImpl implements BookService {
     public void saveBook(String title, String author, String description,
                          String isbn, Integer printYear){
         repository.save(new Book(title, author ,description, isbn, printYear));
-        overtaking();
+//        overtaking();
     }
 
     private void overtaking(){
+        repository.findAll().forEach(System.out::println);
         for (int i = 0; i < repository.findAll().size(); i++) {
             repository.getOne(i+1).setId(i+1);
         }
@@ -67,12 +68,12 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> getBooksByPage(int pageId, int total){
+    public List<Book> getBooksByPage(int pageId, int total, List<Book> bookList){
         List<Book> list = new ArrayList<>();
-        if (repository.findAll().size()>0) {
-            for (int i = (pageId -1) * total; i < repository.findAll().size(); i++) {
+        if (bookList.size()>0) {
+            for (int i = (pageId -1) * total; i < bookList.size(); i++) {
                 if (i == (pageId -1) * total + 10) break;
-                list.add(getBookById(i+1));
+                list.add(bookList.get(i));
             }
         }
         return list;

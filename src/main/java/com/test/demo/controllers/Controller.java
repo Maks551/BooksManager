@@ -25,13 +25,15 @@ public class Controller {
     @RequestMapping(value = "/{pageid}")
     public String get(@PathVariable int pageid, Model model){
 
-        int maxPages = service.findAll().size()%10 == 0? service.findAll().size()%10 : (service.findAll().size()%10)-1;
+        List<Book> bookList = service.findAll();
+        int bookListSize = bookList.size();
+        int maxPages = bookListSize%10 == 0? bookListSize/10 : (bookListSize/10)+1;
 
         if (pageid < 1) pageid = 1;
-        else if (pageid >= maxPages) pageid = maxPages;
+        else if (pageid > maxPages) pageid = maxPages;
 
         model.addAttribute("pageid", pageid);
-        model.addAttribute("viewbooks", service.getBooksByPage(pageid, TOTAL));
+        model.addAttribute("viewbooks", service.getBooksByPage(pageid, TOTAL, bookList));
         return "index";
     }
 

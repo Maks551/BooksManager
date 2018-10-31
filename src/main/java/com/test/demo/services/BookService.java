@@ -13,5 +13,5 @@ public interface BookService {
     void readBook(Integer id);
     void deleteBook(Integer id);
     List<Book> findAll();
-    List<Book> getBooksByPage(int pageId,int total);
+    List<Book> getBooksByPage(int pageId,int total, List<Book> bookListSize);
 }
