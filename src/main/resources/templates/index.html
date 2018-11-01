@@ -93,7 +93,7 @@
 
         <tbody>
         <tr th:each="book : ${viewbooks}">
-            <td th:text="${book.id}" style="text-align: center">#</td>
+            <td th:text="${viewbooks.indexOf(book)}+1+(${pageid}-1)*10" style="text-align: center">#</td>
             <td th:text="${book.title}" style="color: #1e1e57">Title</td>
             <td th:text="${book.description}">Description</td>
             <td th:text="${book.author}">Author</td>

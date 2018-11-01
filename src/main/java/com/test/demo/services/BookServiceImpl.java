@@ -3,40 +3,37 @@ package com.test.demo.services;
 import com.test.demo.model.Book;
 import com.test.demo.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class BookServiceImpl implements BookService {
 
     private BookRepository repository;
+
     @Autowired
-    public void setRepository(BookRepository repository) {
+    public BookServiceImpl(BookRepository repository){
         this.repository = repository;
     }
 
-    @Override
-    public Book getBookById(Integer id) {
+    @Cacheable(value = "book", key = "#id")
+    public Book getById(Integer id) {
         return repository.getOne(id);
     }
 
+    @CacheEvict(value = "book", allEntries = true)
     @Override
-    public void saveBook(String title, String author, String description,
-                         String isbn, Integer printYear){
+    public void save(String title, String author, String description,
+                     String isbn, Integer printYear){
         repository.save(new Book(title, author ,description, isbn, printYear));
-        overtaking();
     }
 
-    private void overtaking(){
-        for (int i = 0; i < repository.findAll().size(); i++) {
-            repository.getOne(i+1).setId(i+1);
-        }
-    }
-
+    @CacheEvict(value = "book", allEntries = true)
     @Override
-    public void updateBook(Integer id, String title, String description, String isbn, Integer printYear) {
+    public void update(Integer id, String title, String description, String isbn, Integer printYear) {
         Book book = repository.getOne(id);
         book.setTitle(title);
         book.setDescription(description);
@@ -46,8 +43,9 @@ public class BookServiceImpl implements BookService {
         repository.save(book);
     }
 
+    @CacheEvict(value = "book", allEntries = true)
     @Override
-    public void readBook(Integer id) {
+    public void read(Integer id) {
         Book book = repository.getOne(id);
         if (!book.isReadAlready()) {
             book.setReadAlready(true);
@@ -55,9 +53,10 @@ public class BookServiceImpl implements BookService {
         }
     }
 
+    @CacheEvict(value = "book", allEntries = true)
     @Override
-    public void deleteBook(Integer id) {
-        repository.delete(getBookById(id));
+    public void delete(Integer id) {
+        repository.delete(getById(id));
     }
 
     @Override
@@ -65,15 +64,14 @@ public class BookServiceImpl implements BookService {
         return repository.findAll();
     }
 
+    @Cacheable(value = "book")
     @Override
-    public List<Book> getBooksByPage(int pageid, int total){
-        List<Book> list = new ArrayList<>();
-        if (repository.findAll().size()>0) {
-            for (int i = (pageid-1) * total; i < repository.findAll().size(); i++) {
-                if (i == (pageid-1) * total + 10) break;
-                list.add(getBookById(i+1));
-            }
-        }
-        return list;
+    public List<Book> getAllForLimit(int offset, int limit) {
+        return repository.getAllForLimit(offset, limit);
+    }
+
+    @Override
+    public Integer getCount() {
+        return repository.getCount();
     }
 }

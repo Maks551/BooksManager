@@ -1,4 +1,4 @@
-package com.test.demo.controllers;
+package com.test.demo.controller;
 
 import com.test.demo.model.Book;
 import com.test.demo.services.BookService;
@@ -11,7 +11,7 @@ import java.util.List;
 
 @org.springframework.stereotype.Controller
 public class Controller {
-    static int TOTAL = 10;
+    private static int TOTAL = 10;
     private BookService service;
     @Autowired
     public void setService(BookService service) {
@@ -25,13 +25,14 @@ public class Controller {
     @RequestMapping(value = "/{pageid}")
     public String get(@PathVariable int pageid, Model model){
 
-        int maxPages = service.findAll().size()%10 == 0? service.findAll().size()%10 : (service.findAll().size()%10)-1;
+        Integer count = service.getCount();
+        int maxPages = count%10 == 0? count/10 : (count/10)+1;
 
         if (pageid < 1) pageid = 1;
-        else if (pageid >= maxPages) pageid = maxPages;
+        else if (pageid > maxPages) pageid = maxPages;
 
         model.addAttribute("pageid", pageid);
-        model.addAttribute("viewbooks", service.getBooksByPage(pageid, TOTAL));
+        model.addAttribute("viewbooks", service.getAllForLimit((pageid-1)*TOTAL, TOTAL));
         return "index";
     }
 
@@ -45,32 +46,32 @@ public class Controller {
                            @RequestParam("description") String description,
                            @RequestParam("isbn") String isbn,
                            @RequestParam("printYear") Integer printYear){
-        service.saveBook(title, author, description, isbn, printYear);
+        service.save(title, author, description, isbn, printYear);
         return "redirect:/";
     }
 
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable Integer id, Model model){
-        Book book = service.getBookById(id);
+        Book book = service.getById(id);
         model.addAttribute("book", book);
         return "operations/edit";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteBook(@PathVariable Integer id){
-        service.deleteBook(id);
+        service.delete(id);
         return "redirect:/";
     }
 
     @GetMapping("/read/{id}")
     public String readBook(@PathVariable Integer id){
-        service.readBook(id);
+        service.read(id);
         return "redirect:/";
     }
 
     @PostMapping("/update/{id}")
     public String readBook(@PathVariable Integer id, Model model){
-        Book book = service.getBookById(id);
+        Book book = service.getById(id);
         model.addAttribute("book", book);
         return "operations/edit";
     }
@@ -81,7 +82,7 @@ public class Controller {
                              @RequestParam("description") String description,
                              @RequestParam("isbn") String isbn,
                              @RequestParam("printYear") Integer printYear){
-        service.updateBook(id, title, description, isbn, printYear);
+        service.update(id, title, description, isbn, printYear);
         return  "redirect:/";
     }
 
@@ -111,8 +112,6 @@ public class Controller {
     @GetMapping("/searchByRead")
     public String searchByRead(@RequestParam String read, Model model){
         boolean result;
-        String[] true_ = {"true", "yes", "y"};
-        String[] false_ = {"false", "no", "n"};
         if (read.equalsIgnoreCase("true") || read.equalsIgnoreCase("yes") || read.equalsIgnoreCase("y")){
             result = true;
         } else if (read.equalsIgnoreCase("false") || read.equalsIgnoreCase("no") || read.equalsIgnoreCase("not")){
