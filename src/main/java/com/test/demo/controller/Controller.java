@@ -22,6 +22,7 @@ public class Controller {
     public String start(Model model){
         return get(1, model);
     }
+
     @RequestMapping(value = "/{pageid}")
     public String get(@PathVariable int pageid, Model model){
 
@@ -40,13 +41,20 @@ public class Controller {
     public String newNote() {
         return "operations/save";
     }
+
     @RequestMapping(value = "/save", method = RequestMethod.GET)
     public String saveBook(@RequestParam("title") String title,
                            @RequestParam("author") String author,
                            @RequestParam("description") String description,
                            @RequestParam("isbn") String isbn,
-                           @RequestParam("printYear") Integer printYear){
-        service.save(title, author, description, isbn, printYear);
+                           @RequestParam("printYear") String printYear){
+        int printYearInt;
+        try {
+            printYearInt = Integer.parseInt(printYear);
+        } catch (NumberFormatException e) {
+            return "operations/save";
+        }
+        service.save(title, author, description, isbn, printYearInt);
         return "redirect:/";
     }
 
@@ -79,10 +87,17 @@ public class Controller {
     @PostMapping("/update")
     public String updateBook(@RequestParam("id") Integer id,
                              @RequestParam("title") String title,
+                             @RequestParam("author") String author,
                              @RequestParam("description") String description,
                              @RequestParam("isbn") String isbn,
-                             @RequestParam("printYear") Integer printYear){
-        service.update(id, title, description, isbn, printYear);
+                             @RequestParam("printYear") String printYear){
+        int printYearInt;
+        try {
+            printYearInt = Integer.parseInt(printYear);
+        } catch (NumberFormatException e) {
+            return "operations/save";
+        }
+        service.update(id, title, author, description, isbn, printYearInt);
         return  "redirect:/";
     }
 
@@ -90,6 +105,7 @@ public class Controller {
     public String search(){
         return "operations/search";
     }
+
     @GetMapping("/searchByTitle")
     public String searchByTitle(@RequestParam String title, Model model){
         List<Book> result = new ArrayList<>();
@@ -112,9 +128,9 @@ public class Controller {
     @GetMapping("/searchByRead")
     public String searchByRead(@RequestParam String read, Model model){
         boolean result;
-        if (read.equalsIgnoreCase("true") || read.equalsIgnoreCase("yes") || read.equalsIgnoreCase("y")){
+        if (read.equalsIgnoreCase("true") || read.equalsIgnoreCase("yes")){
             result = true;
-        } else if (read.equalsIgnoreCase("false") || read.equalsIgnoreCase("no") || read.equalsIgnoreCase("not")){
+        } else if (read.equalsIgnoreCase("false") || read.equalsIgnoreCase("not")){
             result = false;
         } else return "operations/search";
         List<Book> resultList = new ArrayList<>();

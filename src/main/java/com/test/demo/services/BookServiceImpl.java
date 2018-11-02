@@ -33,14 +33,8 @@ public class BookServiceImpl implements BookService {
 
     @CacheEvict(value = "book", allEntries = true)
     @Override
-    public void update(Integer id, String title, String description, String isbn, Integer printYear) {
-        Book book = repository.getOne(id);
-        book.setTitle(title);
-        book.setDescription(description);
-        book.setIsbn(isbn);
-        book.setPrintYear(printYear);
-        book.setReadAlready(false);
-        repository.save(book);
+    public void update(Integer id, String title, String author, String description, String isbn, Integer printYear) {
+        repository.save(new Book(id, title, author, description, isbn, printYear));
     }
 
     @CacheEvict(value = "book", allEntries = true)

@@ -39,4 +39,9 @@ public class Book implements Serializable {
         this.printYear = printYear;
         this.readAlready = false;
     }
+
+    public Book(Integer id, String title, String description, String author, String isbn, Integer printYear) {
+        this(title, description, author, isbn, printYear);
+        this.id = id;
+    }
 }
